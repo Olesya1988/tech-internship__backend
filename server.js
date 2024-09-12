@@ -23,44 +23,53 @@ app.use(function (req, res, next) {
 //     {id: 0, content: "«Секретка» - это специальная гайка или болт, которая отличается рисунком-конфигурацией выемки под специальный ключ и качеством металла. Кроме того, важным атрибутом является специальное вращающееся кольцо против отвертывания экстрактором.", created: new Date().toLocaleString()},
 //     {id: 1, content: "Сход-развал (его же принято называть развал-схождение) – это процедура регулировки углов наклона колес автомобиля. Дело в том, что в процессе эксплуатации подвески колеса могут встать под неправильным углом, и машину при езде будет уводить в сторону. На сухой дороге это может оказаться не слишком заметно, но в дождь разница будет ощутима.", created: new Date().toLocaleString()}
 // ];
-let posts = data.advertisements;
-let nextId = posts.length + 1;
+let advertisements = data.advertisements;
+console.log(advertisements);
+let nextId = advertisements.length + 1;
 
-app.get("/posts", (req, res) => {
-  res.send(JSON.stringify(posts));
+app.get("/advertisements", (req, res) => {
+  res.send(JSON.stringify(advertisements));
 });
 
-app.get("/posts/:id", (req, res) => {
-
-  const postId = Number(req.params.id);
-  const index = posts.findIndex((o) => o.id == postId);
-  res.send(JSON.stringify({ post: posts[index] }));
+app.get("/advertisements/:id", (req, res) => {
+  const advertisementId = req.params.id; 
+  console.log(advertisementId);  
+  const findAdvertisement = advertisements.find((o) =>o.id === advertisementId);
+  console.log(findAdvertisement);  
+  res.send(JSON.stringify({ advertisement: findAdvertisement }));
   
 });
 
-app.post("/posts", (req, res) => {
-  posts.push({ ...req.body, id: String(nextId++), created: new Date().toLocaleString() });
-  console.log(posts);
+app.post("/advertisements", (req, res) => {
+  advertisements.push({ ...req.body, id: String(nextId++), name: req.body.name, description: req.body.description, price: req.body.price, createdAt: new Date().toLocaleString(), views: 0, likes: 0, imageUrl: req.body.imageUrl });
+  console.log(advertisements);
   res.status(204);
   res.end();
 });
 
-app.put("/posts/:id", (req, res) => {
-    console.log(req.body);
-  const postId = Number(req.body.id);
-  console.log(postId);
-  console.log(req.body.content);
-  posts[postId].content = req.body.content;
-  console.log(posts);
+app.put("/advertisements/:id", (req, res) => {
+  const advertisementId = req.params.id; 
+  console.log(advertisementId); 
+  
+  const findAdvertisement = advertisements.find((o) =>o.id === advertisementId);
+  console.log(findAdvertisement);
+  const index = advertisements.findIndex((o) => o == findAdvertisement);  
+  advertisements[index].name = req.body.name; 
+  console.log(advertisements);
+
   res.status(204).end();
 });
 
-app.delete("/posts/:id", (req, res) => {
-  const postId = Number(req.params.id);
-  const index = posts.findIndex((o) => o.id == postId);
-  if (index !== -1) {
-    posts.splice(index, 1);
-  }
+app.delete("/advertisements/:id", (req, res) => {
+  const advertisementId = req.params.id; 
+  console.log(advertisementId); 
+  console.log(typeof advertisementId); 
+  const findAdvertisement = advertisements.find((o) =>o.id === advertisementId);
+  console.log(findAdvertisement);
+  const index = advertisements.findIndex((o) => o == findAdvertisement);
+  console.log(index);  
+  advertisements.splice(index, 1);  
+  console.log(advertisements);
   res.status(204);
   res.end();
 });
@@ -70,5 +79,3 @@ app.listen(port, () =>
   console.log(`The server is running on http://localhost:${port}`)
   
 );
-
-console.log(posts);
