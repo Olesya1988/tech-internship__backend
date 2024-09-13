@@ -19,9 +19,12 @@ app.use(function (req, res, next) {
 });
 
 let advertisements = data.advertisements;
+let orders = data.orders;
 
 let nextId = advertisements.length + 1;
+let nextIdOrder = orders.length + 1;
 
+// Объявления
 app.get("/advertisements", (req, res) => {
   res.send(JSON.stringify(advertisements));
 });
@@ -69,6 +72,11 @@ app.delete("/advertisements/:id", (req, res) => {
   advertisements.splice(index, 1);
   res.status(204);
   res.end();
+});
+
+// Заказы
+app.get("/orders", (req, res) => {
+  res.send(JSON.stringify(orders));
 });
 
 const port = process.env.PORT || 7070;
