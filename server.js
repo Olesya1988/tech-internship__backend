@@ -60,6 +60,9 @@ app.put("/advertisements/:id", (req, res) => {
   );
   const index = advertisements.findIndex((o) => o == findAdvertisement);
   advertisements[index].name = req.body.name;
+  advertisements[index].description = req.body.description;
+  advertisements[index].price = req.body.price;
+  advertisements[index].imageUrl = req.body.imageUrl;
   res.status(204).end();
 });
 
@@ -77,6 +80,16 @@ app.delete("/advertisements/:id", (req, res) => {
 // Заказы
 app.get("/orders", (req, res) => {
   res.send(JSON.stringify(orders));
+});
+
+app.put("/orders/:id", (req, res) => {
+  const ordersId = req.params.id;
+  const findOrder = orders.find(
+    (o) => o.id === ordersId
+  );
+  const index = orders.findIndex((o) => o == findOrder);
+  orders[index].finishedAt = req.body.finishedAt;  
+  res.status(204).end();
 });
 
 const port = process.env.PORT || 7070;
